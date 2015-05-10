@@ -24,10 +24,13 @@ ISO used: `archlinux-2014.12.01-dual.iso`
 | RAM | 2 GB     |
 | CPU | 4 cores  |
 
-*Followed this video https://www.youtube.com/watch?v=Wqh9AQt3nho*
+#### Followed this video (Video)
 
+[![http://www.youtube.com/watch?v=Wqh9AQt3nho)](http://img.youtube.com/vi/Wqh9AQt3nho/0.jpg)](http://www.youtube.com/watch?v=Wqh9AQt3nho)
 
-[Video for dual boot (Win8 for example)](https://www.youtube.com/watch?v=METZCp_JCec)
+#### Dual boot Windows 8 & Arch (Video)
+
+[![http://www.youtube.com/watch?v=METZCp_JCec)](http://img.youtube.com/vi/METZCp_JCec/0.jpg)](http://www.youtube.com/watch?v=METZCp_JCec)
 
 ### Steps used in the video:
 
@@ -142,7 +145,6 @@ ISO used: `archlinux-2014.12.01-dual.iso`
 
       - To find the `$hints_string` : `grub-probe --target=hints_string $esp/EFI/Microsoft/Boot/bootmgfw.efi` (the `$esp` can be replaced by the path to the /EFI, normally `/boot/efi`)
       - To find the `$fs_uuid` : `grub-probe --target=fs_uuid $esp/EFI/Microsoft/Boot/bootmgfw.efi` (the `$esp` can be replaced by the path to the /EFI, normally `/boot/efi`)
-
     -  Then run  `grub-mkconfig -o /boot/grub/grub.cfg` to create the GRUB config file.
 
 25. Exit the chroot session
@@ -555,16 +557,18 @@ http://wealsodocookies.com/posts/openbox-a-windows-environment-for-hackers/
 
 - Create file at `/usr/bin/gdmflexiserver`
 
-      - #!/bin/sh
-      #pretend to be gdmflexiserver so the XFCE action plugin's Switch User function works
+	```bash
+	#!/bin/sh
+	#pretend to be gdmflexiserver so the XFCE action plugin's Switch User function works
 
-      #lock the current session
-      xscreensaver-command -lock
+	#lock the current session
+	xscreensaver-command -lock
 
-      #then pass on the request to lightdm
-      exec dm-tool switch-to-greeter
+	#then pass on the request to lightdm
+	exec dm-tool switch-to-greeter
+	```
 
-- ** Make sure the file is executable ** : `sudo chmod +x /usr/local/bin/gdmflexiserver`
+- **Make sure the file is executable** : `sudo chmod +x /usr/local/bin/gdmflexiserver`
 - The "xscreensaver" part is optional but is good for security.
 
 ## Troubleshooting
