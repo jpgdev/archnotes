@@ -227,7 +227,7 @@ Some useful applications
 
 - Network manager : `networkmanager`
   - Applet : `network-manager-applet`
-
+	- *NOTE* : To add prompt for secured networks, we need a keyring app, like `gnome-keyring`
 - Cairo-dock : `cairo-dock` + `cairo-dock-plugins`
 
 - Locomotive for `ls` typo: `sl`, shows a locomotive when you type `sl` instead of `ls`
@@ -272,6 +272,10 @@ Some useful applications
 
 - `geeknote-improved-git` : Evernote CLI client.
 		- Note: `geeknote-git` is no longer updated, get the improved one.
+
+- `grip` : CD Ripper & Encoder
+
+- `Asunder` : CD Ripper, Tagger & Encoder
 
 ### VirtualBox
 
