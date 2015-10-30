@@ -68,13 +68,13 @@ ISO used: `archlinux-2014.12.01-dual.iso`
 
 12. Setup the network connection
     -   Wired connection : Should already be connected
-    -   Wifi connection : `wifi-menu` (google how to use it)
+    -   Wifi connection : `wifi-menu` 
 
 13. Install base system + development libraries (in case some package
     need it as a dependancy) to root drive.
-    -   Use pacman: `pacstrap /mnt base base-devel`
+    -   Use pacman: `pacstrap /mnt base base-devel` 
 
-14. If the EFI Partiton DIrectory was created by another OS like windows.
+14. **(OPTIONAL)** If the EFI Partiton Directory was created by another OS like windows.
 
     -  `mkdir -p /mnt/boot/efi` then mount the EFI Partition Directory `mount /dev/sda2 /mnt/boot/efi` (**/dev/sda2** is the vfat partition containing the EFI Partition Directory)
 
@@ -87,7 +87,7 @@ ISO used: `archlinux-2014.12.01-dual.iso`
     -   `passwd` and then enter the password
 
 17. Edit locale
-    -   `nano /etc/locale.gen`
+    -   `nano /etc/locale.gen` (or `vim /etc/locale.gen`)
     -   Find the right language, starts with **en\_CA** or **en\_US** in my case. Uncomment the corresponding `'...UTF-8 UTF-8'` line and `'...ISO-8859-1'` line.
     -   `CTRL + O` to write line + ENTER
     -   `CTRL + X` to exit
@@ -96,21 +96,19 @@ ISO used: `archlinux-2014.12.01-dual.iso`
     -   `locale-gen`
 
 19. Specify a TimeZone
-
-    -   `cd /usr/share/zoneinfo`
-    -   `ls`
-    -   `cd /usr/share/zoneinfo/Canada`
-    -   `ls`
     -   `ln -s /usr/share/zoneinfo/Canada/Eastern /etc/localtime`
 
 20. Set hostname for the system
     -   `echo NAME > /etc/hostname`
     -   The NAME is the machine name (ex. arch-laptop)
 
-21. Download GRUB (or another bootloader)
+21. **(OPTIONAL)** To connect to wifi using wifi-menu in the booted OS
+    -   `pacman -S iw wpa_supplicant dialog`
+
+22. Download GRUB (or another bootloader like `refind`)
     -   `pacman -S grub`
 
-22. Install GRUB to hard drive
+23. Install GRUB to hard drive
 
     - For Windows Dual Boot
         - Mount the EFI directory partition to `/mnt/boot` (should be the **vfat** partition)
@@ -121,10 +119,10 @@ ISO used: `archlinux-2014.12.01-dual.iso`
     -   NOTE: Use the hard drive name, **NOT** the partition. (here:
         /dev/sda).
 
-23. Generate init file that GRUB will use to load linux.
+24. Generate init file that GRUB will use to load linux.
     -   `mkinitcpio -p linux`
 
-24. Create GRUB config file
+25. Create GRUB config file
   - If you have multiple OSes, install `os-prober` before running `grub-mkconfig`(?) .
   - **If you have error with os-prober** and it can't find the other OSes, you have to add it manually [related article from the Arch Wiki on GRUB](https://wiki.archlinux.org/index.php/GRUB#Windows_installed_in_UEFI-GPT_Mode_menu_entry).
       - You have to add the menuentry manually in the  `/etc/grub.d/40_custom`, replace the `$hints_string` and `$fs_uuid` with their values as shown in the wiki.
@@ -147,10 +145,10 @@ ISO used: `archlinux-2014.12.01-dual.iso`
       - To find the `$fs_uuid` : `grub-probe --target=fs_uuid $esp/EFI/Microsoft/Boot/bootmgfw.efi` (the `$esp` can be replaced by the path to the /EFI, normally `/boot/efi`)
     -  Then run  `grub-mkconfig -o /boot/grub/grub.cfg` to create the GRUB config file.
 
-25. Exit the chroot session
+26. Exit the chroot session
     -   `exit`
 
-26. Generate an fstab file based on our HD
+27. Generate an fstab file based on our HD
     -   An **FSTAB** file contains informations on the partitions on the
         system.
     -   `genfstab -p /mnt > /mnt/etc/fstab`
@@ -158,13 +156,13 @@ ISO used: `archlinux-2014.12.01-dual.iso`
         [here](https://www.youtube.com/watch?v=kQFzVG4wZEg) around
         14:30.
 
-27. Unmount the root device (and others if applicable)
+28. Unmount the root device (and others if applicable)
     -   `umount -R /mnt`
 
-28. Reboot the system
+29. Reboot the system
     -   `reboot`
 
-29. **The OS is now installed.**
+30. **The OS is now installed.**
 
 Setup user
 ----------
@@ -185,7 +183,9 @@ Setup user
 Setup the Network interface
 ---------------------------
 
-#### Enable DCHP upon boot
+#### Enable DHCP upon boot 
+
+##### Note: Only do this for wired-connection (ethernet)
 
 1.   Find network interface
 
@@ -429,6 +429,13 @@ Installing a Desktop Environment / Window Manager
 
 **This is required to use any graphical environment**
 
+-   To use the multilib repository, uncomment the [multilib] section in `/etc/pacman.conf` (Please be sure to uncomment both lines):
+
+	```
+		[multilib]
+		Include = /etc/pacman.d/mirrorlist
+	```
+
 -   Installing [xorg-server](https://wiki.archlinux.org/index.php/Xorg)
 
     -   `pacman -S xorg-server xorg-xinit`
@@ -541,6 +548,13 @@ http://wealsodocookies.com/posts/openbox-a-windows-environment-for-hackers/
 
 ### LightDM
 
+- Enable LightDM service : `systemctl enable lightdm.service` and `systemctl start lightdm.service` (or reboot)
+- NOTE : LightDM NEEDS a greeter if automatic login is not enabled, or it won't work.
+    - Greeters:
+        - `lightdm-gtk-greeter` (basic one, available on arch repos)
+        - `lightdm-webkit-greeter` (aur)
+    
+
 - `light-locker` :
 		To use : `light-locker-command --lock` (if using `xflock4` and it does not work, add the line in `/usr/bin/xflock4`).
 		** NOTE: Need to do this each time the XFCE package for the lock (`xfce4-session` I think) is changed. **
@@ -591,3 +605,8 @@ http://wealsodocookies.com/posts/openbox-a-windows-environment-for-hackers/
 The clock may use the UTC as default time instead of the localtime
 
 https://wiki.archlinux.org/index.php/Time#Time_standard
+
+
+### Pacman
+
+- Setup color output: Uncomment the `Color` line in `/etc/pacman.conf`
